@@ -7,3 +7,8 @@ figcaption {
 figcaption p {
 	font-size: 75%;
 }
+
+/* Center figures*/
+figure {
+	text-align: center;
+}
