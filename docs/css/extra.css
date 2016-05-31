@@ -1,0 +1,9 @@
+figcaption {
+  text-align: center;
+  font-style: italic;
+  font-weight: bold;
+}
+
+figcaption p {
+	font-size: 75%;
+}
