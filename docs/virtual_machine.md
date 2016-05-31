@@ -161,3 +161,16 @@ Next logout from the current session and log back in. Open up a new terminal and
 $ id
 uid=1000(bioboost) gid=1000(bioboost) groups=1000(bioboost), 4(adm), 24(cdrom), 27(sudo), 30(dip), 46(plugdev), 107(lpadmin), 110(sambashare), 111(vboxsf)
 ```
+
+## Backups and snapshots
+
+It is always a good idea to backup your project files. You can now easily copy them to shared folder and put them on OneDrive, DropBox or a USB stick.
+
+Another good idea is to create periodical snapshots of your virtual machine. This snapshot will contain all the delta's compared to the previous state of the VM. Just select the VM you want to create a snapshot of and hit the **Snapshots** button in the top right corner of VirtualBox. Next click the left icon to create a snapshot. Fill in the name and description as shown in the figure below.
+
+![Creating a VM snapshot](img/vm_snapshot.png)
+:   Creating a VM snapshot
+
+Adding a decent description will save you the misery of having the search through the snapshots for the correct state if your VM should fail.
+
+You could even do this after every LAB session.
