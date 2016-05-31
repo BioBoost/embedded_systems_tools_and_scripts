@@ -12,3 +12,11 @@ figcaption p {
 figure {
 	text-align: center;
 }
+
+/* Wrap code so we dont have
+horizontal scroll bars and hidden code*/
+@media print {
+    pre code {
+        white-space: pre-wrap;
+    }
+}

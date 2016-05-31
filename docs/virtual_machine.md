@@ -2,14 +2,14 @@
 
 A virtual machine (VM) is an emulation of a particular computer system. This system can be based on an existing or hypothetical machine. As a user we can create such virtual machines and install an operating system of choice on them. This allows us to run a Linux distribution while working on a Windows machine and vice versa.
 
-Several software packages are available to create and run virtual machines. Examples are VMware, Hyper-V  which comes with Windows 8, Oracle VirtualBox, ... For our labs we will be using VirtualBox as this is free, lightweight, easy to use and available for Windows, Linux, Mac and Solaris.
+Several software packages are available to create and run virtual machines. Examples are VMware,  Hyper-V  which comes with Windows 8,  Oracle VirtualBox,  ... For our labs we will be using VirtualBox as this is free,  lightweight,  easy to use and available for Windows,  Linux,  Mac and Solaris.
 
 !!! note "Hyper-V"
-	Hyper-V, codenamed Viridian and formerly known as Windows Server Virtualization, is a native hypervisor; it can create virtual machines on x86-64 systems. Starting with Windows 8, Hyper-V supersedes Windows Virtual PC as the hardware virtualization component of the client editions of Windows NT.
+	Hyper-V,  codenamed Viridian and formerly known as Windows Server Virtualization,  is a native hypervisor; it can create virtual machines on x86-64 systems. Starting with Windows 8,  Hyper-V supersedes Windows Virtual PC as the hardware virtualization component of the client editions of Windows NT.
 
 ## Installing Virtual Box
 
-Start by going to the download section of the website of VirtualBox (https://www.virtualbox.org/). Download the VirtualBox platform package for your system. At the moment of this writing the current version of VirtualBox is 5.0.20. When running the installer package make sure to install VirtualBox with all features enabled as shown in the figure below.
+Start by going to the download section of the website of VirtualBox ([https://www.virtualbox.org](https://www.virtualbox.org)). Download the VirtualBox platform package for your system. At the moment of this writing the current version of VirtualBox is 5.0.20. When running the installer package make sure to install VirtualBox with all features enabled as shown in the figure below.
 
 ![Installing VirtualBox with all features enabled](img/virtual_box_install.png)
 :   Installing VirtualBox with all features enabled
@@ -39,7 +39,7 @@ The first step consist of giving your VM a name and selecting the operating syst
 ![Creating a VM - The name and OS](img/vm_new.png)
 :   Creating a VM - The name and OS
 
-Next we need to select the amount of memory we want to assign to the virtual machine. The recommended amount is 512MB. However if you have more than 4GB, select 1024MB or even 2048MB, which will improve the responsiveness and performance of the VM.
+Next we need to select the amount of memory we want to assign to the virtual machine. The recommended amount is 512MB. However if you have more than 4GB,  select 1024MB or even 2048MB,  which will improve the responsiveness and performance of the VM.
 
 ![Creating a VM - Amount of memory](img/vm_memory.png)
 :   Creating a VM - Amount of memory
@@ -88,14 +88,14 @@ Default the VM is configured with a single network adapter with NAT (Network Add
 
 ## Installing an Operating System on the Virtual Machine
 
-Before we can install an operating system on our virtual machine, it is necessary to download an installation image for the Linux distribution we will be using. This image can then be mounted on our VM allowing us to boot from it. In our case we will use Linux Mint 17.3 (Rosa) - Cinnamon (64-bit), which can be downloaded from [https://www.linuxmint.com/download.php](https://www.linuxmint.com/download.php). Make sure to select the 64-bit Desktop edition. Linux Mint is derivative of Ubuntu, but with a less intrusive graphical desktop environment.
+Before we can install an operating system on our virtual machine,  it is necessary to download an installation image for the Linux distribution we will be using. This image can then be mounted on our VM allowing us to boot from it. In our case we will use Linux Mint 17.3 (Rosa) - Cinnamon (64-bit),  which can be downloaded from [https://www.linuxmint.com/download.php](https://www.linuxmint.com/download.php). Make sure to select the 64-bit Desktop edition. Linux Mint is derivative of Ubuntu,  but with a less intrusive graphical desktop environment.
 
 Once downloaded start VirtualBox and open the setting of your VM. Next open the storage settings. Now select the virtual CD/DVD drive below the IDE controller as shown in step 1 in the figure below:
 
 ![Steps for mounting an image in VirtualBox](img/vm_mount_iso.png)
 :   Steps for mounting an image in VirtualBox
 
-Hit the small CD/DVD icon next to the IDE Secondary Master dropdown (step 2 in the figure above) and select Choose a virtual CD/DVD disk file ... A browse window will open; select the image file you downloaded from the Linux Mint website and hit OK. Hit the OK button of the setting panel to close it.
+Hit the small CD/DVD icon next to the IDE Secondary Master dropdown (step 2 in the figure above) and select **Choose a virtual CD/DVD disk file ...** A browse window will open; select the image file you downloaded from the Linux Mint website and hit OK. Hit the OK button of the setting panel to close it.
 
 Ready ? Then hit the start button of the VM and follow the steps for installing the Linux Mint operating system. If you see the automatic boot screen shown below do nothing an let it pass. Linux Mint will boot in Live mode and allow you to start the install process from that point on.
 
@@ -112,3 +112,52 @@ From this point on all steps are self-explanatory. Most of the installation step
 If you click inside the VM window your mouse cursor will automatically be captured. Releasing your cursor can be achieved using the right CTRL key.
 
 Once the installation procedure is finished you will be asked to reboot the VM.
+
+## Installing Guest Additions
+
+You may or may not have noticed that your mouse movement is a bit sluggish within the VM. That is because the guest additions haven not been installed yet.
+
+Open the Devices menu which can be found at the top of the VM window. Next select **Insert Guest Additions CD image ...** as shown in the figure below. A window in Linux will open asking if you'd wish to run the package. Hit run and follow the instructions.
+
+![Inserting the Guest Additions for Linux Mint](img/mint_guest_additions.png)
+:   Inserting the Guest Additions for Linux Mint
+
+Once finished remove the image from the virtual drive (by right clicking the icon on the Desktop of Linux Mint and choosing Eject). Restart the virtual machine.
+
+!!! warning "Updates"
+	If you update your machine it is necessary to repeat this procedure.
+
+You should now be able to resize the guest window. Or you can switch to fullscreen by hitting `RCTRL-F`.
+
+!!! note "Software Rendering Mode"
+	If you get a popup after login saying that Linux Mint is running in software rendering mode,  it can be fixed by going to `Settings => Display => Screen` and enabling **3D Acceleration** of your virtual machine. Make sure to restart the VM.
+
+## Creating a shared folder
+
+Some files can be dragged and dropped between your host machine and the VM. However this does not seem to be possible for all file types. For these instances it is more easy to create a shared directory which can be accessed from your host and the VM.
+
+Navigate to `Settings => Shared Folders` of your virtual machine as depicted in the figure below:
+
+![Shared folders settings of VM](img/mint_settings_shared_folder.png)
+:   Shared folders settings of VM
+
+Create a shared folder on your system and make sure to select the **Auto-mount** option as shown in the figure below.
+
+![Creating a shared folder for your VM](img/mint_shared_folder.png)
+:   Creating a shared folder for your VM
+
+The folder should now be automatically mounted under /media in your VM on your next reboot and should also be available on the Desktop of Linux Mint. However if you try to open the folder you will get a permission error. To fix this it is ncessary to add your used to the group `vboxsf`. You can achieve this by opening up a terminal (`CTRL-ALT-T`) and entering the command below. More on this later.
+
+```shell
+$ sudo usermod -a -G vboxsf <your_account_name>
+```
+
+!!! note "Command Line instructions"
+	Note how the commands in this course are all proceeded by the dollar sign ($). This is the symbol that indicates the end of the prompt and should not be typed. Different distributions or shells may show different symbols for this.
+
+Next logout from the current session and log back in. Open up a new terminal and enter the `id` command to get a list of all the groups your user belongs to. `111(vboxsf)` should be one of them.
+
+```shell
+$ id
+uid=1000(bioboost) gid=1000(bioboost) groups=1000(bioboost), 4(adm), 24(cdrom), 27(sudo), 30(dip), 46(plugdev), 107(lpadmin), 110(sambashare), 111(vboxsf)
+```
