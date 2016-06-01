@@ -2,6 +2,7 @@ site_name: Embedded Systems
 pages:
   - Introduction: index.md
   - Operating Systems: operating_systems.md
+  - Virtual Machine: virtual_machine.md
   - About: about.md
 theme: readthedocs
 markdown_extensions:
