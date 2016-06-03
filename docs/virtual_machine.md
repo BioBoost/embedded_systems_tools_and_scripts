@@ -130,7 +130,7 @@ Once finished remove the image from the virtual drive (by right clicking the ico
 You should now be able to resize the guest window. Or you can switch to fullscreen by hitting `RCTRL-F`.
 
 !!! note "Software Rendering Mode"
-	If you get a popup after login saying that Linux Mint is running in software rendering mode,  it can be fixed by going to `Settings => Display => Screen` and enabling **3D Acceleration** of your virtual machine. Make sure to restart the VM.
+	If you get a popup after login saying that Linux Mint is running in software rendering mode, it can be fixed by going to `Settings => Display => Screen` and enabling **3D Acceleration** of your virtual machine. You may also need to increase the video memory a bit to for example **32MB**. Make sure to restart the VM after changing these settings.
 
 ## Creating a shared folder
 
