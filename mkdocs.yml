@@ -3,6 +3,7 @@ pages:
   - Introduction: index.md
   - Operating Systems: operating_systems.md
   - Virtual Machine: virtual_machine.md
+  - Compiling RPi Kernel: compile_rpi_kernel.md
   - About: about.md
 theme: readthedocs
 markdown_extensions:
