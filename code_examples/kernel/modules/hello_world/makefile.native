@@ -1,0 +1,19 @@
+# Indicate that module is not signed
+CONFIG_MODULE_SIG=n
+
+# Goal definition (defines the module to be build)
+# obj-m for loadable and obj-y for built-in
+obj-m+=hello.o
+
+# Kernel dir
+# NDW: Think this is same as kernel headers in /usr/src/linux-headers-xxx
+KDIR=/lib/modules/$(shell uname -r)/build/
+
+# Place of project files
+PWD=$(shell pwd)
+
+all:
+	make -C $(KDIR) M=$(PWD) modules
+
+clean:
+	make -C $(KDIR) M=$(PWD) clean
