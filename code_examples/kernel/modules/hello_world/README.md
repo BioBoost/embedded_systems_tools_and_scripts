@@ -43,7 +43,18 @@ git clone git@github.com:raspberrypi/tools.git rpi-tools
 
 #### Linux Kernel Headers
 
-Can be found at https://github.com/raspberrypi/linux
+Check the kernel version on the pi using `uname`
+
+```shell
+uname -r
+```
+
+Can be found at https://github.com/raspberrypi/linux. Create a shallow clone (to save some space and time) of the correct branch (rpi-4.4.y in example below) matching the RPI kernel version.
+
+```shell
+cd
+git clone --depth 1 -b rpi-4.4.y https://github.com/raspberrypi/linux.git rpi-linux
+```
 
 Kernel headers on a desktop system can be found at '/usr/src' and can be installed using apt-get.
 
