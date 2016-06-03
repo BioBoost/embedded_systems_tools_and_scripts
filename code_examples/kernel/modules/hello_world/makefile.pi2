@@ -1,0 +1,23 @@
+# Indicate that module is not signed
+CONFIG_MODULE_SIG=n
+
+# Goal definition (defines the module to be build)
+# obj-m for loadable and obj-y for built-in
+obj-m+=hello.o
+
+# Cross-compiler
+ARCH=arm
+CROSS_COMPILE=/home/bioboost/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
+
+# Kernel dir
+# Needs to be set to the repo we fetched
+KDIR=/home/bioboost/rpi-linux
+
+# Place of project files
+PWD=$(shell pwd)
+
+all:
+	make ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KDIR) M=$(PWD) modules
+
+clean:
+	make ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KDIR) M=$(PWD) clean
