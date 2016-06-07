@@ -177,36 +177,62 @@ ARCH=arm CROSS_COMPILE=${CCPREFIX} make menuconfig
 
 Let's try to change something arbitrary like the 'local version string' which shows when using the `uname` command. Traverse to `General setup => Local version - append to kernel release` and change it to a custom string. An example is shown in the figure below. Make sure to save and exit before proceeding.
 
+!!! warning "Local Version String"
+	Do not use special characters or spaces for the local version string of the linux kernel as it will be integrated in the modules path build later in this course. A good example is 'v7-build-by-mark'; a bad one is 'v7 [build by m@rk]'
+
 ![Changing the Local Version of the Kernel](img/kernel_config_localversion.png)
 :   Changing the Local Version of the Kernel
 
 ### Building the kernel and modules
 
-To build the kernel, the modules and device trees (more on this later) the following make command can be used:
+To build the kernel, the modules and device trees (more on this later) the following commands can be used:
 
 ```shell
 ARCH=arm CROSS_COMPILE=${CCPREFIX} make zImage modules dtbs
+ARCH=arm CROSS_COMPILE=${CCPREFIX} make INSTALL_MOD_PATH=/tmp/modules modules_install
+scripts/mkknlimg arch/arm/boot/zImage /tmp/kernel7.img
 ```
 
 !!! note "Threads"
 	`-j#` sets the number of threads that should be used to build the kernel. It should be set to 1.5* the number of cores in your CPU. So if you have 4 cores, you should set it to 6. On a VM you can omit the argument unless you used more than 1 core.
 
+Next we need to make a package containing all the build modules. If a dedicated machine were to be used this step would be simpler as we could deploy the modules directly to the SD card. However with Virtual Box it is not possible to directly access an SD card.
 
+```shell
+cd /tmp/modules
+tar czf modules.tgz *
+scp /tmp/modules/modules.tgz pi@<ip-address>:/tmp
+```
 
+Next we need the kernel image and the device tree blobs to be copied to the Raspberry Pi:
 
+```shell
+mkdir -p /tmp/boot/overlays
 
+mv /tmp/kernel7.img /tmp/boot/kernel7.img
 
+cp /home/$(whoami)/rpi-linux/arch/arm/boot/dts/*.dtb /tmp/boot/
+cp /home/$(whoami)/rpi-linux/arch/arm/boot/dts/overlays/*.dtb* /tmp/boot/overlays
+cp /home/$(whoami)/rpi-linux/arch/arm/boot/dts/overlays/README /tmp/boot/overlays
 
-TODO:
-Next, install the modules:
+scp -r /tmp/boot pi@<ip-address>:/tmp
+```
 
-sudo make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=mnt/ext4 modules_install
+Now login to the Pi do deploy the new kernel:
 
-Finally, copy the kernel and Device Tree blobs onto the SD card, making sure to back up your old kernel:
-sudo cp mnt/fat32/$KERNEL.img mnt/fat32/$KERNEL-backup.img
-sudo scripts/mkknlimg arch/arm/boot/zImage mnt/fat32/$KERNEL.img
-sudo cp arch/arm/boot/dts/*.dtb mnt/fat32/
-sudo cp arch/arm/boot/dts/overlays/*.dtb* mnt/fat32/overlays/
-sudo cp arch/arm/boot/dts/overlays/README mnt/fat32/overlays/
-sudo umount mnt/fat32
-sudo umount mnt/ext4
+```shell
+ssh pi@<ip-address>
+sudo cp /boot/kernel7.img /boot/kernel7.img.old
+cd / && sudo tar xzf /tmp/modules.tgz
+sudo cp -r /tmp/boot/* /boot
+```
+
+This should be it. Restart the Raspberry Pi and keep you fingers crossed it shows back up.
+
+If all went well the new kernel should be operational. Check using `uname`:
+
+```shell
+ssh pi@<ip-address>
+uname -a
+Linux rasp-embedded 4.4.12-v7-build-by-bioboost+ #2 SMP Tue Jun 7 14:32:57 CEST 2016 armv7l GNU/Linux
+```
