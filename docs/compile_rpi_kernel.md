@@ -113,10 +113,11 @@ echo $CCPREFIX
 /home/bioboost/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-
 ```
 
-Don't want to do this every time ? Then add the following line to `~/.profile` or `./bashrc` to make the script start on every login or shell launch:
+Don't want to do this every time ? Then add the following lines to the bottom of `~/.zshrc` or `./bashrc` to make the export on every login or shell launch:
 
 ```shell
-source $HOME/setup_cross_compiler.sh
+# Cross-compiler for RPI
+export CCPREFIX=$HOME/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-
 ```
 
 ### Configuring the Kernel
@@ -236,3 +237,5 @@ ssh pi@<ip-address>
 uname -a
 Linux rasp-embedded 4.4.12-v7-build-by-bioboost+ #2 SMP Tue Jun 7 14:32:57 CEST 2016 armv7l GNU/Linux
 ```
+
+Make sure not to delete any files on your development machine as they will be needed for compiling the loadable kernel modules. Maybe now is a good time to create a snapshot of the VM.
