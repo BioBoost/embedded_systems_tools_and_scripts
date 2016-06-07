@@ -2,15 +2,15 @@
 
 There are several reasons why one would want to compile a Linux kernel.
 
-First you might want to upgrade your current LInux kernel to a newer version. You can then download the sources and compile the newer version.
+First you might want to upgrade your current Linux kernel to a newer version. You can then download the sources and compile the newer version.
 
 Ofcourse if you want to add features to the kernel or change something you will also need to compile the full kernel to be able to test it out.
 
 Another reason would be the need for the build context of the kernel when developing loadable kernel modules.
 
-This course mainly needs a new compiled kernel for the kernel context to allow the building of loadable kernel modules. Ofcourse it's also a nice challenge to build a Linux kernel for an embedded system.
+This course mainly needs a new compiled kernel for its build context to allow the building of loadable kernel modules. Ofcourse it's also a nice challenge to build a Linux kernel for an embedded system.
 
-There are two main methods for building the kernel. You can build locally on a Raspberry Pi which is fairly easy but will take a long time; or you can cross-compile, which is much quicker, but requires more setup.
+There are two main methods for building the kernel. You can build it nativally on a Raspberry Pi which is fairly easy but will take a long time; or you can cross-compile, which is much quicker, but requires more setup.
 
 ## Cross-compiling the Kernel
 
@@ -47,7 +47,13 @@ To save some time and place its best to clone a shallow copy of the repository u
 cd && git clone --depth 1 -b rpi-4.4.y https://github.com/raspberrypi/linux.git rpi-linux
 ```
 
-This should take a few minutes after which a directory `rpi-linux` should have been created in your home dir.
+!!! note "Cloning a branch"
+	When cloning a repository you clone all remote branches and all history.
+	This can take up a lot of space and time with a huge repository.
+	By using the `-b <branchname>` argument it is possible to only clone a specific remote branch.
+	By providing an argument of `--depth 1` to the clone command, the clone process will copy only the latest revision of everything in the repository instead of every single revision of every single file in history. You can check this by doing a `git log` inside the clone.
+
+This will take a few minutes after which a directory `rpi-linux` should have been created in your home dir.
 
 ### Cross-compiler
 
@@ -56,12 +62,13 @@ Next we need to setup the cross-compiler so we can use our development machine t
 Luckely a cross-compiler is readily available. All we need to do is clone it.
 
 ```shell
-cd && git clone https://github.com/raspberrypi/tools.git rpi-tools
+cd && git clone --depth 1 https://github.com/raspberrypi/tools.git rpi-tools
 ```
 
 This will clone the required tools in your home directory.
 
-Now if we want to cross-compile something we will need to provide the path to the cross-compiler. For the moment we will do it manually inside a terminal by exporting the path to the compiler. Do take note that if you close the terminal the path will be forgotten. So you will need to redo the export. Also do not forget to substitute `<username>` with the username of your account on your development machine.
+
+Now if we want to cross-compile something we will need to provide the path to the cross-compiler. You can try to do it manually inside a terminal by exporting the path to the compiler. Do take note that if you close the terminal the path will be forgotten. So you will need to redo the export. Also do not forget to substitute `<username>` with the username of your account on your development machine.
 
 ```shell
 export CCPREFIX=/home/<username>/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-
@@ -69,9 +76,52 @@ export CCPREFIX=/home/<username>/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnue
 
 Make sure not to make any typo's and use tab-completion !
 
+On the other hand to you can also create a small script to this for you. First create a shell script. Add a shebang and the export command to it using nano. 
+
+```shell
+cd && nano setup_cross_compiler.sh
+```
+
+Add the following:
+
+```shell
+#!/bin/sh
+export CCPREFIX=/home/<username>/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-
+```
+
+Or even better using the `whoami` command:
+
+```shell
+#!/bin/sh
+export CCPREFIX=/home/$(whoami)/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-
+```
+
+Save the script, make it executable and run it. Do take note that you need to use the `source` command to run the script otherwise it will be run in another shell and the export will be lost.
+
+```shell
+chmod u+x setup_cross_compiler.sh
+source ./setup_cross_compiler.sh
+```
+
+!!! warning "Closing the terminal"
+	Again note that if you close the terminal, the export will also be lost.
+
+Make sure to check if all went well by echoing: `echo $CCPREFIX`. You should get the following result:
+
+```shell
+echo $CCPREFIX
+/home/bioboost/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-
+```
+
+Don't want to do this every time ? Then add the following line to `~/.profile` or `./bashrc` to make the script start on every login or shell launch:
+
+```shell
+source $HOME/setup_cross_compiler.sh
+```
+
 ### Configuring the Kernel
 
-While we could configure the kernel ourselves it would save us several days if the configuration of the kernel that is currently running on the Pi can be used. Luckely it can.
+While we could configure the kernel ourselves, it would save us several days if the configuration of the kernel that is currently running on the Raspberry Pi can be used. Luckely it can.
 
 For this you will need to login to the Raspberry Pi using ssh:
 
@@ -93,7 +143,11 @@ cp /proc/config.gz .
 gunzip config.gz
 ```
 
-Now you can go back to your development machine and copy the config into the linux source tree.
+!!! note "Kernel Config"
+	Go ahead and take a look inside the kernel config file. You can do this with the `cat /tmp/config` command.
+	If you wish to know the speed at which the I2C bus is configured try executing the command `cat /tmp/config | grep CONFIG_I2C_BCM2708_BAUDRATE`
+
+Now you can go back to your development machine and copy the config into the linux source tree using secure copy.
 
 ```shell
 cd ~/rpi-linux
@@ -110,11 +164,25 @@ ARCH=arm CROSS_COMPILE=${CCPREFIX} make oldconfig
 
 Note how we need to provide the actual architecture (ARM in this case) and the path to the cross-compiler.
 
-You will be presented with a list of new options available in the newer kernel. You should be careful what options to enable or disable. However in most cases you can just press ENTER to pick the default option.
+![Making the Old Config](img/kernel_old_config.png)
+:   Making the Old Config
+
+You will be presented with a list of new options available in the newer kernel as shown in the image above. You should be careful what options to enable or disable. However in most cases you can just press ENTER to pick the default option.
+
+It is also possible to change the kernel configuration through a graphical interface. Execute the following command to show the menuconfig:
+
+```shell
+ARCH=arm CROSS_COMPILE=${CCPREFIX} make menuconfig
+```
+
+Let's try to change something arbitrary like the 'local version string' which shows when using the `uname` command. Traverse to `General setup => Local version - append to kernel release` and change it to a custom string. An example is shown in the figure below. Make sure to save and exit before proceeding.
+
+![Changing the Local Version of the Kernel](img/kernel_config_localversion.png)
+:   Changing the Local Version of the Kernel
 
 ### Building the kernel and modules
 
-To build the whole lot the following make command can be used:
+To build the kernel, the modules and device trees (more on this later) the following make command can be used:
 
 ```shell
 ARCH=arm CROSS_COMPILE=${CCPREFIX} make zImage modules dtbs
@@ -133,8 +201,8 @@ TODO:
 Next, install the modules:
 
 sudo make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=mnt/ext4 modules_install
-Finally, copy the kernel and Device Tree blobs onto the SD card, making sure to back up your old kernel:
 
+Finally, copy the kernel and Device Tree blobs onto the SD card, making sure to back up your old kernel:
 sudo cp mnt/fat32/$KERNEL.img mnt/fat32/$KERNEL-backup.img
 sudo scripts/mkknlimg arch/arm/boot/zImage mnt/fat32/$KERNEL.img
 sudo cp arch/arm/boot/dts/*.dtb mnt/fat32/
