@@ -7,11 +7,11 @@ obj-m+=hello.o
 
 # Cross-compiler
 ARCH=arm
-CROSS_COMPILE=/home/bioboost/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
+CROSS_COMPILE=~/rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
 
 # Kernel dir
 # Needs to be set to the repo we fetched
-KDIR=/home/bioboost/rpi-linux
+KDIR=~/rpi-linux
 
 # Place of project files
 PWD=$(shell pwd)
