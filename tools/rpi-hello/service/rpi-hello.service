@@ -1,0 +1,26 @@
+#!/bin/sh
+
+[Unit]
+Description=RPI Hello Broadcast script
+Before=systemd-user-sessions.service
+
+[Service]
+# Do not wait for the script to start
+TimeoutStartSec=0
+WorkingDirectory=/usr/local/share/rpi-hello
+
+ExecStart=/usr/bin/python /usr/local/share/rpi-hello/rpi-hello.py start
+User=root
+
+# If set to forking, it is expected that the process will call fork() as part of its start-up.
+# The parent process is expected to exit when start-up is complete and all communication channels are set up.
+Type=forking
+
+# Takes a boolean value that specifies whether the service shall be considered active even when all its processes exited.
+RemainAfterExit=yes
+
+ExecStop=/usr/bin/python /usr/local/share/rpi-hello/rpi-hello.py stop
+User=root
+
+[Install]
+WantedBy=multi-user.target
