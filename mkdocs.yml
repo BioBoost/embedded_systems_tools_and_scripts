@@ -1,9 +1,13 @@
 site_name: Embedded Systems
 pages:
   - Introduction: index.md
-  - Operating Systems: operating_systems.md
   - Virtual Machine: virtual_machine.md
-  - Compiling RPi Kernel: compile_rpi_kernel.md
+  - Linux Basics: linux_basics.md
+  - GIT versioning: git_versioning.md
+  - Compiling and Makefiles: compiling_makefiles.md
+  - Rpi Operating System: rpi_operating_system.md
+  - The Linux Kernel: the_linux_kernel.md
+  - Loadable Kernel Modules: loadable_kernel_modules.md
   - About: about.md
   - ToDo: todo.md
 theme: readthedocs
