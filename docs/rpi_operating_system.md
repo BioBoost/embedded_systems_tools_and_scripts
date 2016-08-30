@@ -101,6 +101,83 @@ One of the most useful commands you should remember is the `ifconfig` command wh
 
 ### RS232 Connection
 
-A last option that can be used to connect to the Raspberry Pi is using a serial connection. This is often used for debugging embedded systems because it is a very basic connection type. Because of this the kernel will also output its kernel messages (debugging information and errors) to this connection. Since most computers these days lack the serial interface we can use a simple RS232 to USB converter such as the PL-2303HX.
+A last option that can be used to connect to the Raspberry Pi is using a serial connection. This is often used for debugging embedded systems because it is a very basic connection type. Because of this the kernel will also output its kernel messages (debugging information and errors) to this connection. Since most computers these days lack the serial interface we can use a simple RS232 to USB converter such as the PL-2303HX (see https://www.adafruit.com/datasheets/PL2303HX.pdf for datasheet).
 
 To attach the converter we do have to take a look at the pinout of the GPIO connector on the Raspberry Pi board, shown in the figure below.
+
+![Raspberry Pi 2 GPIO pinout](img/raspberry_pi2_pinout.png)
+:   Raspberry Pi 2 GPIO pinout
+
+The serial-to-USB converter has three pins that need to be connected to the UART of the Pi. A Tx (transmit), an Rx (receive) and a GND (ground) pin. To allow communication with the Raspberry Pi 2 the Tx of the Pi has to be connected with the Rx of the converter, while the Rx of the Pi has to be connected with the Tx of the converter. The GND pin of the converter needs to be connected to a GND pin of the Pi. Do **NOT** connect the 3V3 or 5V pin of the connector to the Pi! The necessary connections are shown in the figure below.
+
+![Connecting the PLX2303HX to UART0 of the Raspberry Pi 2](img/rs232_connection_pi2.png)
+:   Connecting the PLX2303HX to UART0 of the Raspberry Pi 2
+
+Just as with SSH, you can use Putty for the serial terminal. Just select "serial" as connection type, "COMx" (where x is an integer number) as serial line and "115200" as speed. An example is shown in the figure below. Choose open and you will a get a command line interface similar to the one of SSH.
+
+![Serial line connection parameters](img/serial_to_usb_parameters.png)
+:   Serial line connection parameters
+
+!!! note "Determining the COM device"
+	You can find the COM port number in the device manager. Select the "Ports (COM & LPT)" category and look for a "USB-to-Serial Comm Port (COMx)" device.
+
+If you reboot your Raspberry Pi at this moment you will see the kernel messages shown in the next figure mentioned earlier.
+
+![Kernel messages on serial interface](img/kernel_messages_serial_interface.png)
+:   Kernel messages on serial interface
+
+### Checking the Kernel Messages
+
+While the RS232 connection will automatically show the kernel messages while booting, you can also retrieve the output from an SSH connection by using the `dmesg` (display messages) command below:
+
+```shell
+$ dmesg
+```
+
+This outputs the kernel messages to your current terminal.
+
+When initially booted, a computer system loads its kernel into memory. At this stage device drivers present in the kernel are set up to drive relevant hardware. Such drivers, as well as other elements within the kernel, may produce output ("messages") reporting both the presence of modules and the values of any parameters adopted. (It may be possible to specify boot parameters which control the level of detail in the messages.) The booting process typically happens at a speed where individual messages scroll off the top of the screen before an operator can read/digest them. The dmesg command allows the review of such messages in a controlled manner after the system has started.
+
+Even after the system has fully booted, the kernel may occasionally produce further diagnostic messages. Common examples of when this might happen are when I/O devices encounter errors, or USB devices are hot-plugged.
+
+The output of dmesg can amount to many complete screens. For this reason, this output is normally reviewed using standard text-manipulation tools such as more, tail, less or grep. The output is often captured in a permanent system logfile via a logging daemon, such as syslog.
+
+You can try using the `dmesg` command piped to the `more` command:
+
+```shell
+$ dmesg | more
+```
+
+You can advance line per line using `ENTER` or block per block by using `SPACEBAR`.
+
+!!! note "Piping"
+	By using the pipe operator `|`, data can be send from one program to another. What this operator does is feed the output from the program on the left as input to the program on the right.
+
+
+## Initial Configuration
+
+If you choose to attach an external display to the Pi, then you will already have seen the menu with the initial configuration options shown in the figure below.
+
+![Raspbian initial configuration tool](img/raspi_config.png)
+:   Raspbian initial configuration tool
+
+If you choose to use the SSH or serial method you will need to run the next command to get this configuration menu.
+
+```shell
+$ sudo raspi-config
+```
+
+Don't worry too much about how this works. This will be explained in a later chapter. Once you're done configuring the Pi, choose the Finish option and let the Pi reboot.
+
+
+### Expanding the Filesystem
+
+The first thing we need to do is expand the filesystem. Currently we are using SD cards of 8GB, 16GB or 32GB but the root file system only takes up about 3GB (with more than 80% in use). So to expand the root filesystem to the full SD card we can use the Expand Filesystem configuration script. You will need to reboot the Raspberry Pi to make this available.
+
+### Change User Password
+
+The "Change User Password" tool allows you to change the default password of the pi user. Make sure to do this before continuing. Watch out if you do this using an external keyboard as the keyboard layout may be configured to qwerty. In this case configure the keyboard layout first by selecting the internationalization menu option.
+
+### Enable Boot to Desktop / Scratch
+
+You can change what happens when your Pi boots. Use this option to change your boot preference to command line, desktop, or straight to Scratch (graphical programming). In our case we will be using the command line interface.
