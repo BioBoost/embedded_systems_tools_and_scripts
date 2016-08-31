@@ -181,3 +181,120 @@ The "Change User Password" tool allows you to change the default password of the
 ### Enable Boot to Desktop / Scratch
 
 You can change what happens when your Pi boots. Use this option to change your boot preference to command line, desktop, or straight to Scratch (graphical programming). In our case we will be using the command line interface.
+
+### Internationalization Options
+
+This will open up a sub menu with internationalization options to configure.
+
+#### Change Locale
+
+Locales are a framework to switch between multiple languages and allow users to use their language, country, characters, collation order, etc.
+
+In the first screen you will be asked which locales to generate. UTF-8 locales should be chosen by default, particularly for new installations. Other character sets may be useful for backwards compatibility with older systems and software.
+
+Select both `en_US.UTF-8 UTF-8` and `nl_BE.UTF-8 UTF-8`. On the next screen you can pick any of these two to be the default locale.
+
+#### Change Timezone
+
+The time zone should be changed to "Europe – Brussels" to reflect our own time zone.
+
+#### Change Keyboard Layout
+
+This option opens another menu which allows you to select your keyboard layout. It will take a long time to display while it reads all the keyboard types. Changes usually take effect immediately, but may require a reboot.
+
+This option however does not seem to work with the current version of the configuration tool.
+
+You can however change between US and BE keyboard layout by executing one of the following commands the next time you get to the command line interface:
+
+```shell
+$ sudo setxkbmap us -variant euro
+```
+
+or
+
+```shell
+$ sudo setxkbmap be
+```
+
+Do take note that this change is only temporarily and will not be remembered once you reboot.
+
+You can get some extra information about the current keyboard layout by issuing the following command:
+
+```shell
+setxkbmap -print -verbose 10
+```
+
+### Enable Camera
+
+In order to use the Raspberry Pi camera module, you must enable it here. This option will also make sure at least 128MB of RAM is dedicated to the GPU.
+
+### Add to Rastrack
+
+Rastrack is a user-contributed Google Map to which Pi users in the community have added their location; it shows a heat map of where Pi users are known to be around the world. This was set up by young Pi enthusiast Ryan Walmsley in 2012. Rastrack is located at rastrack.co.uk.
+
+Skip this option for the LAB.
+
+### Overclock
+
+It is possible to overclock your Raspberry Pi's CPU. The default is 700MHz but it can be set up to 1000MHz. The overclocking you can achieve will vary; overclocking too high may result in instability.
+
+Selecting this option shows the following warning:
+*Be aware that overclocking may reduce the lifetime of your Raspberry Pi. If overclocking at a certain level causes system instability, try a more modest overclock. Hold down 'shift' during boot to temporarily disable overclock.*
+
+For our LABs we will leave the Pi with its default settings.
+
+### Advanced Options
+
+The advanced options allow the configuration of the SSH daemon, the hostname, the division of the memory with the GPU and so on.
+
+#### Overscan
+
+Old TV sets had a significant variation in the size of the picture they produced; some had cabinets that overlapped the screen. TV pictures were therefore given a black border so that none of the picture was lost; this is called overscan. Modern TVs and monitors don't need the border, and the signal doesn't allow for it. If the initial text shown on the screen disappears off the edge, you need to enable overscan to bring the border back.
+
+On some displays, particularly monitors, disabling overscan will make the picture fill the whole screen and correct the resolution. For other displays, it may be necessary to leave overscan enabled and adjust its values.
+
+Any changes will take effect after a reboot.
+
+#### Hostname
+
+Set the visible name for this Pi on a network. Pick a unique name, different from the other students.
+
+#### Memory Split
+
+Change the amount of memory made available to the GPU (Graphics Processing Unit). For the initial LAB exercises you can change this to 16MB.
+
+#### SSH
+
+Enable/disable remote command line access to your Pi using SSH (Secure Shell).
+
+SSH allows you to remotely access the command line of the Raspberry Pi from another computer. Disabling this ensures the SSH service does not start on boot, freeing up processing resources. Note that SSH is enabled by default. If connecting your Pi directly to a public network, you should disable SSH unless you have set up secure passwords for all users.
+
+Make sure to leave this enabled or you will be required to reconfigure your Pi using an external display and keyboard or by using a serial connection.
+
+#### SPI
+Enable/disable automatic loading of SPI (Serial Peripheral Interface) kernel module, needed for products such as PiFace.
+
+#### Audio
+Force audio out through HDMI or a 3.5mm jack.
+
+#### Update
+
+Update this tool (raspi-config) to the latest version. This requires an active Internet connection.
+
+## Checking the configuration
+
+At this point you should be able to login to the Pi using the pi user with the new password. If you execute the disk free command you should get a similar output to the one shown in the figure below.
+
+```shell
+$ df –h
+```
+
+!!! note "Disk Free"
+	`df` stands for disk free and the `–h` option requests a human readable output formatting.
+
+Notice how the disk size has increased and the used disk space percentage has dropped significantly.
+
+![Output of the disk free command after initial configuration](img/free_disk_space.png)
+:   Output of the disk free command after initial configuration
+
+Also notice how the hostname of the device changed (HAL  in this case). Rescanning the subnet should result in systems with all different hostnames.
