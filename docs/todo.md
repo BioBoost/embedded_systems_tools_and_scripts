@@ -57,8 +57,19 @@ Introduction into linux
 * Writing scripts
 * ASSIGNMENT: write small script
 
+### Session 4 (about 4 hours)
 
-### Session 4 (about 2 hours)
+Raspberry Pi as embedded system and embedded operating systems
+
+* Raspbian
+* Creating SD and booting the PI
+* Scanning network
+* SSH connection and remote login
+* Hello injector + writing new image
+* Secure CoPy (SCP)
+
+
+### Session 5 (about 2 hours)
 
 Setting up the development environment
 
@@ -71,7 +82,7 @@ Introduction into GIT
 * Pushing to github
 * Cloning existing repositories
 
-### Session 5 (about 2 hours)
+### Session 6 (about 2 hours)
 
 Compilation and makefiles
 
@@ -80,17 +91,6 @@ Compilation and makefiles
 * Compiling the app
 * Introduction makefiles
 * Creating a simple makefile for hello world
-
-### Session 6 (about 4 hours)
-
-Raspberry Pi as embedded system and embedded operating systems
-
-* Raspbian
-* Creating SD and booting the PI
-* Scanning network
-* SSH connection and remote login
-* Hello injector + writing new image
-* Secure CoPy (SCP)
 
 ### Session 7 (about 2 hours)
 
