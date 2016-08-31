@@ -298,3 +298,7 @@ Notice how the disk size has increased and the used disk space percentage has dr
 :   Output of the disk free command after initial configuration
 
 Also notice how the hostname of the device changed (HAL  in this case). Rescanning the subnet should result in systems with all different hostnames.
+
+## Connecting to your Raspberry Pi
+
+[TODO] Hello-injector, SSH, ...
