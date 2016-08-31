@@ -5,6 +5,14 @@ Students should buy their own SD card.
 rpi-hello needs a script to inject it into an IMG file. We should allow students to add description to script so they can identify their own PI.
 
 
+## Assignments:
+
+Assignment
+Install the git package and create a local clone inside your homedir (currently the user pi) of the repository https://github.com/BioBoost/multimediatechnieken
+
+Assignment
+Install the apache package and find out where the webpages are stored. Make sure you can view your PI’s website from your host machine. Change the index.html page (you can use the nano editor for this) and add some cool things to it.
+
 
 
 ## Course overview
