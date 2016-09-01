@@ -1,12 +1,14 @@
+[TOC]
+
 # Compiling the RPi Kernel
 
-There are several reasons why one would want to compile a Linux kernel.
+There are several reasons why one would want to compile a Linux kernel:
 
-First you might want to upgrade your current Linux kernel to a newer version. You can then download the sources and compile the newer version.
+* First you might want to upgrade your current Linux kernel to a newer version. You can then download the sources and compile the newer version.
 
-Ofcourse if you want to add features to the kernel or change something you will also need to compile the full kernel to be able to test it out.
+* Ofcourse if you want to add features to the kernel or change something you will also need to compile the full kernel to be able to test it out.
 
-Another reason would be the need for the build context of the kernel when developing loadable kernel modules.
+* Another reason would be the need for the build context of the kernel when developing loadable kernel modules.
 
 This course mainly needs a new compiled kernel for its build context to allow the building of loadable kernel modules. Ofcourse it's also a nice challenge to build a Linux kernel for an embedded system.
 

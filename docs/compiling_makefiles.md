@@ -105,6 +105,8 @@ The main differences:
 
 g++ is equivalent to `gcc -xc++ -lstdc++ -shared-libgcc` (the 1st is a compiler option, the 2nd two are linker options). 
 
+### Compiling Hello World
+
 A simple hello world example:
 
 ```cpp
@@ -157,6 +159,159 @@ Hello Universe from the Embedded World!
 ```
 
 Conclusion: don't make your life more complex than needed and use g++ to compile your C++ and C programs.
+
+## Makefiles
+
+Compiling your source code files can be tedious, specially when you want to include several source files and have to type the compiling command everytime you want to do it. Well, I have news for you ... Your days of command line compiling are (mostly) over, because you will learn how to write simple Makefiles.
+
+Makefiles are special format files that together with the make utility will help you to automagically build and manage your projects.
+
+The makefile directs make on how to compile and link a program. Using C/C++ as an example, when a C/C++ source file is changed, it must be recompiled. If a header file has changed, each C/C++ source file that includes the header file must be recompiled to be safe. Each compilation produces an object file corresponding to the source file. Finally, if any source file has been recompiled, all the object files, whether newly made or saved from previous compilations, must be linked together to produce the new executable program. These instructions with their dependencies are specified in a makefile. If none of the files that are prerequisites have been changed since the last time the program was compiled, no actions take place. For large software projects, using Makefiles can substantially reduce build times if only a few source files have changed.
+
+### Separate Compilation
+
+One of the features of C and C++ that's considered a strength is the idea of "separate compilation". Instead of writing all the code in one file, and compiling that one file, C/C++ allows you to write many .cpp files and compile them separately. With few exceptions, most .cpp files have a corresponding .h file.
+
+A .cpp usually consists of:
+
+* the implementations of all methods in a class,
+* standalone functions (functions that aren't part of any class),
+* and global variables (usually avoided).
+
+The corresponding .h file contains
+
+* class declarations,
+* function prototypes,
+* and extern variables (again, for global variables).
+* The purpose of the .h files is to export "services" to other .cpp files.
+
+For example, suppose you wrote a Vector class. You would have a .h file which included the class declaration. Suppose you needed a Vector in a MovieTheater class. Then, you would #include "vector.h.
+
+Why all the talk about how .cpp files get compiled in C++? Because of the way C++ compiles files, makefiles can take advantage of the fact that when you have many .cpp files, it's not necessary to recompile all the files when you make changes. You only need to recompile a small subset of the files. Back in the old days, a makefile was very convenient. Compiling was slow, and therefore, having to avoid recompiling every single file meant saving a lot of time.
+
+Although it's much faster to compile now, it's still not very fast. If you begin to work on projects with hundreds of files, where recompiling the entire code can take many hours, you will still want a makefile to avoid having to recompile everything.
+
+
+### Basics of Makefiles
+
+A makefile is based on a very simple concept. A makefile typically consists of many entries. Each entry has:
+
+* a target (usually a file)
+* the dependencies (files which the target depends on)
+* and commands to run, based on the target and dependencies.
+
+Let's look at a simple example.
+
+```make
+student.o: student.cpp
+   g++ -Wall -c student.cpp
+```
+
+`-Wall` has already been explained but `-c` has not. It tells the compiler to compile the code into an object file and stop there. This allows us to compile all .cpp files into object files and later link them all together into an executable file.
+
+The basic syntax of an entry looks like:
+
+```make
+<target>: [ <dependency > ]*
+	[ <TAB> <command> <endl> ]+
+```
+
+As with other programming, we also like to make our makefiles as DRY (Don't Repeat Yourself) as possible. For this reason the compiler, the compiler flags and linker flags are set as variables in the makefile, allowing them to be reused and changed quickly if needed.
+
+Let's see an example for a simple hello world program with a single main.cpp file:
+
+```Cpp
+#include <stdio.h>
+
+int main(void)
+{
+  printf("Hello World\r\n");
+  return 0;
+}
+```
+
+```make
+# The compiler to use
+CC=g++
+
+# Compiler flags
+CFLAGS=-c -Wall
+	# -c: Compile or assemble the source files, but do not link. The linking stage simply is not done. The ultimate output is in the form of an object file for each source file.
+	# -Wall: This enables all the warnings about constructions that some users consider questionable, and that are easy to avoid (or modify to prevent the warning), even in conjunction with macros.
+
+# Name of executable output
+EXECUTABLE=hello
+
+$(EXECUTABLE): main.o
+	$(CC) main.o -o $(EXECUTABLE)
+
+main.o: main.cpp
+	$(CC) $(CFLAGS) main.cpp
+```
+
+Notice how the compilation of the main.cpp file and the eventual linking of all object files (is this case only one, excluding libraries) is split into two targets.
+
+Now to start the make process all you need to do is traverse to the directory with the Makefile in it and execute the `make` with a target specified:
+
+```shell
+$ make hello
+g++ -c -Wall main.cpp
+g++ main.o -o hello
+$ ls
+hello  main.cpp  main.o  Makefile
+```
+
+Most makefiles will also include an 'all' target. This allows the compilation of the full project. The 'all' target is usually the first in the makefile, since if you just write `make` in command line, without specifying the target, it will build the first target. And you expect it to be 'all'.
+
+Another frequent target is the 'clean' target. This removes both the executables and all intermediary files that were generated. Always make sure to execute a `make clean` before commiting your changes to git.
+
+With both these targets added, the makefile becomes:
+
+```make
+# The compiler to use
+CC=g++
+
+# Compiler flags
+CFLAGS=-c -Wall
+	# -c: Compile or assemble the source files, but do not link. The linking stage simply is not done. The ultimate output is in the form of an object file for each source file.
+	# -Wall: This enables all the warnings about constructions that some users consider questionable, and that are easy to avoid (or modify to prevent the warning), even in conjunction with macros.
+
+# Name of executable output
+EXECUTABLE=hello
+
+all: $(EXECUTABLE)
+
+$(EXECUTABLE): main.o
+	$(CC) main.o -o $(EXECUTABLE)
+
+main.o: main.cpp
+	$(CC) $(CFLAGS) main.cpp
+
+clean:
+	rm -f *.o $(EXECUTABLE)
+```
+
+!!! hint "Assignment 5.1"
+	Create a simple hello world program (in C++) with an accompanied makefile. Do however use gcc instead of g++. Remember you have to add something for the linker. Also take note that the argument needs to be supplied to the linker and not actually to the compiler. So for extra credits make sure to do it DRY. Zip it all up and upload it to Toledo. Make sure to execute a `make clean`.
+
+
+### A More Complex Hello World Example
+
+
+
+
+
+
+
+
+## Cross-compiling for Raspberry Pi
+
+### What is Cross-compilation
+
+### Setup of environment
+
+### Creating a Makefile
+
 
 ### Embedded Systems Compilers
 
