@@ -1,11 +1,3 @@
-# Embedded Systems Course
+# Embedded Systems - Tools and Scripts
 
-This course was created by Nico De Witte as part of the Electronics - ICT training at Vives University College in Ostend / Bruges.
-
-## Deploying to Github
-
-By deploying the docs to Github, they can be accessed through http://BioBoost.github.io/embedded_systems_course
-
-```shell
-mkdocs gh-deploy --clean
-```
+These are tools, scripts and examples for the Embedded Systems LAB
